@@ -15,7 +15,8 @@ services:
       # Required in production: browser origins allowed to open the WebSocket.
       WS_ALLOWED_ORIGINS: "${WS_ALLOWED_ORIGINS:?Set WS_ALLOWED_ORIGINS, e.g. https://draw.example.com}"
     ports:
-      - "3000:3000"
+      - "${HOST_PORT:-3000}:3000"
+      - "${WS_HOST_PORT:-4100}:4100"
     expose:
       # WebSocket port for a reverse proxy on the same Docker network.
       - "4100"
