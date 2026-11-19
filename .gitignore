@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+build/
+next-env.d.ts
+
+# Runtime data (world snapshots)
+.data/
+
+# Env files
+.env
+.env*.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs and OS noise
+*.log
+.DS_Store
+Thumbs.db

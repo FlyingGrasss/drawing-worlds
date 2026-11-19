@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --background: #fdfaf7;
+    --surface: #fffdfb;
+    --surface-subtle: #f8f1eb;
+    --foreground: #1f1b1a;
+    --muted: #6f625c;
+    --border: #e9ddd5;
+    --border-strong: #a08e82;
+    --primary: #e11d48;
+    --primary-hover: #be123c;
+    --primary-soft: #fff1f3;
+    --on-primary: #ffffff;
+    --success: #15803d;
+    --warning: #9a3412;
+    --warning-soft: #fff7ed;
+    --warning-border: #fed7aa;
+    --danger: #b91c1c;
+    --focus: #be123c;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system,
+      "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: #fecdd3;
+    color: #4c0519;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 68rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .shell {
+      padding-inline: 2rem;
+    }
+  }
+
+  .font-display {
+    font-family: var(--font-display), var(--font-body), ui-sans-serif,
+      system-ui, sans-serif;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.7rem 1.15rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 160ms ease, border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .btn-primary {
+    background-color: var(--primary);
+    color: var(--on-primary);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-primary:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .btn-secondary {
+    background-color: var(--surface);
+    border-color: var(--border-strong);
+    color: var(--foreground);
+  }
+
+  .btn-secondary:hover {
+    background-color: #ffffff;
+    border-color: var(--foreground);
+  }
+
+  .field {
+    width: 100%;
+    min-height: 2.75rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    padding: 0.65rem 0.875rem;
+    color: var(--foreground);
+    font-size: 1rem;
+    line-height: 1.25;
+    transition: border-color 160ms ease;
+  }
+
+  .field::placeholder {
+    color: #9c8d85;
+  }
+
+  .field:hover {
+    border-color: var(--foreground);
+  }
+
+  .field:focus {
+    border-color: var(--primary);
+  }
+
+  .field[aria-invalid="true"] {
+    border-color: var(--danger);
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 50;
+    transform: translateY(-200%);
+    border-radius: 0.5rem;
+    background-color: var(--foreground);
+    color: var(--background);
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: transform 160ms ease;
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
