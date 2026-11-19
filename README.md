@@ -68,3 +68,25 @@ In production, browser origins must be listed comma-separated in `WS_ALLOWED_ORI
 Strokes are saved to `.data/worlds.json` with a 2-second debounce using a temp file + atomic rename; shutdown flushes pending changes. Delete `.data/` to reset all worlds. Snapshots are restored tolerantly and re-checked against every cap.
 
 Worlds are public and anonymous: do not put private content in them.
+
+## Docker deployment
+
+The repository includes `Dockerfile`, `.dockerignore`, `docker-compose.yml`, and `scripts/start.sh`. The image builds Next.js, then runs the WebSocket server (4100) and `next start` (3000) in one container as the non-root `node` user (UID 1000). `NODE_ENV=production` is fixed and no secrets are baked into the image.
+
+```bash
+cat > .env <<'EOF'
+NEXT_PUBLIC_WS_URL=wss://draw.example.com/ws
+WS_ALLOWED_ORIGINS=https://draw.example.com
+EOF
+
+docker compose up -d --build
+docker compose logs -f app
+```
+
+- **`NEXT_PUBLIC_WS_URL` is build-time only.** `next build` inlines it into the browser bundle; setting it at runtime has no effect. It must be the public `wss://` URL of the WebSocket endpoint, normally `wss://draw.example.com/ws`. After changing it, rebuild: `docker compose build --no-cache app && docker compose up -d`.
+- Required: `NEXT_PUBLIC_WS_URL` (build arg) and `WS_ALLOWED_ORIGINS` (comma-separated browser origins; production rejects browsers when empty). Both are enforced by `${VAR:?...}` in compose.
+- Fixed in the container: `WS_PORT=4100`.
+- Published port: `3000` only. Port `4100` is exposed on the Compose network for a reverse proxy; Next.js does not proxy WebSocket upgrades, so the proxy must route `/ws` directly to `app:4100`. If the proxy runs on the host, publish `4100:4100` as well. A commented Caddy example is in `docker-compose.yml`.
+- Persistence: `./data` is bind-mounted at `/app/data`. The image symlinks `/app/.data` to `/app/data`, so the app's existing `.data/worlds.json` path lands on the mounted volume. Back up `data/worlds.json`. On Linux, make the directory writable by UID 1000: `mkdir -p data && sudo chown -R 1000:1000 data`.
+- Health checks: `GET /` on 3000 and `GET /healthz` on 4100.
+- Stop with `docker compose down`; data survives. The start script forwards `SIGTERM`, letting the WS server flush the snapshot.
