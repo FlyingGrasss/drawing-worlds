@@ -372,7 +372,7 @@ export function WorldRoom({ slug }: WorldRoomProps) {
   }, [clearPending, self, send, status]);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col">
+    <div className="flex h-[100dvh] flex-col overflow-hidden">
       <WorldHeader
         slug={slug}
         status={status}
